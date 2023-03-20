@@ -1,5 +1,4 @@
 ﻿using Core.Entidades;
-using GlobalTours.Datos;
 using Infraestructura.Datos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
