@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Core.Entidades;
+using GlobalTours.Datos;
+using Infraestructura.Datos;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GlobalTours.Controllers;
 
@@ -6,16 +10,25 @@ namespace GlobalTours.Controllers;
 [Route("api/[controller]")]
 public class LugaresController : Controller
 {
-    [HttpGet]
-    public string GetLugares()
+    private readonly ApplicationDbContext _db; 
+
+    public LugaresController(ApplicationDbContext db)
     {
-        return "Esta va  a ser una lista de los lugares";
+        _db = db; // inyeccion de dependencias
+    }
+    
+    [HttpGet]
+    public async Task<ActionResult<List<Lugar>>> GetLugares()
+    {
+        var lugares = await _db.Lugares.ToListAsync(); // se usa async para que no se bloquee el hilo
+
+        return Ok(lugares);// se usa ok para que devuelva un 200
     }
     
     [HttpGet("{id}")]
-    public string GetLugar(int id)
+    public async Task<ActionResult<Lugar>> GetLugar(int id)
     {
-        return "Este va a ser un lugar en particular";
+        return await _db.Lugares.FindAsync(id); // se usa async para que no se bloquee el hilo
     }
     
 }

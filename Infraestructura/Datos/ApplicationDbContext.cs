@@ -1,7 +1,7 @@
-﻿using GlobalTours.Entidades;
+﻿using Core.Entidades;
 using Microsoft.EntityFrameworkCore;
 
-namespace GlobalTours.Datos;
+namespace Infraestructura.Datos;
 
 public class ApplicationDbContext : DbContext // hereda de una clase de entityFramework
 {
