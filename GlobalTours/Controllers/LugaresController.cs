@@ -1,4 +1,5 @@
 ﻿using Core.Entidades;
+using Core.Interfaces;
 using Infraestructura.Datos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,17 +10,16 @@ namespace GlobalTours.Controllers;
 [Route("api/[controller]")]
 public class LugaresController : Controller
 {
-    private readonly ApplicationDbContext _db; 
-
-    public LugaresController(ApplicationDbContext db)
+    private readonly ILugarRepositorio _repo;
+    public LugaresController(ILugarRepositorio repo)
     {
-        _db = db; // inyeccion de dependencias
+        _repo = repo;
     }
     
     [HttpGet]
     public async Task<ActionResult<List<Lugar>>> GetLugares()
     {
-        var lugares = await _db.Lugares.ToListAsync(); // se usa async para que no se bloquee el hilo
+        var lugares = await _repo.GetLugaresAsync(); // se usa async para que no se bloquee el hilo
 
         return Ok(lugares);// se usa ok para que devuelva un 200
     }
@@ -27,7 +27,7 @@ public class LugaresController : Controller
     [HttpGet("{id}")]
     public async Task<ActionResult<Lugar>> GetLugar(int id)
     {
-        return await _db.Lugares.FindAsync(id); // se usa async para que no se bloquee el hilo
+        return await _repo.GetLugarAsync(id); // se usa async para que no se bloquee el hilo
     }
     
 }
