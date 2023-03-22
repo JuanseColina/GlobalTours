@@ -58,7 +58,7 @@ namespace Infraestructura.Datos.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Descripcion = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    GastoAprox = table.Column<double>(type: "double", nullable: false),
+                    GastoAproximado = table.Column<double>(type: "double", nullable: false),
                     ImagenUrl = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PaisId = table.Column<int>(type: "int", nullable: false),

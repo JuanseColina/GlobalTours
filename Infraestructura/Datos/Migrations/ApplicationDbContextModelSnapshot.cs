@@ -48,7 +48,7 @@ namespace Infraestructura.Datos.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<double>("GastoAprox")
+                    b.Property<double>("GastoAproximado")
                         .HasColumnType("double");
 
                     b.Property<string>("ImagenUrl")

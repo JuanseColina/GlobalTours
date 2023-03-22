@@ -15,7 +15,7 @@ public class LugarConfiguration : IEntityTypeConfiguration<Lugar>
         builder.Property(l => l.Id).IsRequired(); 
         builder.Property(l => l.Nombre).IsRequired().HasMaxLength(100);
         builder.Property(l => l.Descripcion).IsRequired();
-        builder.Property(l => l.GastoAprox).IsRequired();
+        builder.Property(l => l.GastoAproximado).IsRequired();
         
         builder.HasOne(c => c.Categoria) // Lugar tiene una Categoria 
             .WithMany()

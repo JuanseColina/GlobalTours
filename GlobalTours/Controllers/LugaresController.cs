@@ -1,8 +1,9 @@
-﻿using Core.Entidades;
+﻿using AutoMapper;
+using Core.Entidades;
+using Core.Especificaciones;
 using Core.Interfaces;
-using Infraestructura.Datos;
+using GlobalTours.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace GlobalTours.Controllers;
 
@@ -10,24 +11,47 @@ namespace GlobalTours.Controllers;
 [Route("api/[controller]")]
 public class LugaresController : Controller
 {
-    private readonly ILugarRepositorio _repo;
-    public LugaresController(ILugarRepositorio repo)
-    {
-        _repo = repo;
-    }
-    
-    [HttpGet]
-    public async Task<ActionResult<List<Lugar>>> GetLugares()
-    {
-        var lugares = await _repo.GetLugaresAsync(); // se usa async para que no se bloquee el hilo
+    private readonly IRepositorio<Lugar> _lugarRepositorio;
+    private readonly IRepositorio<Pais> _paisRepositorio;
+    private readonly IRepositorio<Categoria> _categoriaRepositorio;
+    private readonly IMapper _mapper;
 
-        return Ok(lugares);// se usa ok para que devuelva un 200
-    }
-    
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Lugar>> GetLugar(int id)
+    public LugaresController(IRepositorio<Lugar> lugarRepositorio, IRepositorio<Pais> paisRepositorio,
+           IRepositorio<Categoria> categoriaRepositorio, IMapper mapper)
     {
-        return await _repo.GetLugarAsync(id); // se usa async para que no se bloquee el hilo
+        _lugarRepositorio = lugarRepositorio;
+        _paisRepositorio = paisRepositorio;
+        _categoriaRepositorio = categoriaRepositorio;
+        _mapper = mapper;
     }
     
+    [HttpGet]// se usa get para obtener los lugares
+    public async Task<ActionResult<IReadOnlyList<LugarDto>>> GetLugares()
+    {
+        var espec = new LugaresConPaisCategoriaEspecificacion(); // se usa la especificacion
+        var lugares = await _lugarRepositorio.ObtenerTodosEspec(espec); // se usa async para que no se bloquee el hilo
+
+        return Ok(_mapper.Map<IReadOnlyList<Lugar>, IReadOnlyList<LugarDto>>(lugares));// se usa ok para que devuelva un 200
+    }
+    
+    [HttpGet("{id}")]// se usa el id para buscar el lugar
+    public async Task<ActionResult<LugarDto>> GetLugar(int id)
+    {
+        var espec = new LugaresConPaisCategoriaEspecificacion(id);// se usa la especificacion
+        var lugar = await _lugarRepositorio.ObtenerEspec(espec); // se usa async para que no se bloquee el hilo
+        return _mapper.Map<Lugar, LugarDto>(lugar); // se usa el mapper para mapear el lugar a un lugarDto
+    }
+
+    [HttpGet("paises")]
+    public async Task<ActionResult<List<Pais>>> GetPaises()
+    {
+        return Ok(await _paisRepositorio.ObtenerTodosAsync());
+    }
+    
+    [HttpGet("categorias")]
+    public async Task<ActionResult<List<Categoria>>> GetCategoria()
+    {
+        return Ok(await _categoriaRepositorio.ObtenerTodosAsync());
+    }
+
 }

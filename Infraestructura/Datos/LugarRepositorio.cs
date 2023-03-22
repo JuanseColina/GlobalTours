@@ -22,6 +22,7 @@ public class LugarRepositorio : ILugarRepositorio
 
     public async Task<IReadOnlyList<Lugar>> GetLugaresAsync()
     {
+        
         return await _db.Lugares
             .Include(p=> p.Pais)// se incluye el pais
             .Include(c=>c.Categoria)// se incluye la categoria

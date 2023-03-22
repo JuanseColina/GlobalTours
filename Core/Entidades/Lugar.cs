@@ -9,7 +9,7 @@ public class Lugar
     public int Id { get; set; }
     public string Nombre { get; set; }
     public string Descripcion { get; set; }
-    public double GastoAprox { get; set; }
+    public double GastoAproximado { get; set; }
     public string ImagenUrl { get; set; }
     public int  PaisId { get; set; }
     [ForeignKey("PaisId")]

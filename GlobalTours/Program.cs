@@ -1,4 +1,5 @@
 using Core.Interfaces;
+using GlobalTours.Helpers;
 using Infraestructura.Datos;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,11 +16,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ILugarRepositorio, LugarRepositorio>();
-
+builder.Services.AddScoped<ILugarRepositorio, LugarRepositorio>(); // se agrega el repositorio de lugar
+builder.Services.AddScoped(typeof(IRepositorio<>), typeof(Repositorio<>)); // se agrega el repositorio generico
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
 var app = builder.Build();
 
-// aplicar las nuevas migraciones al ejecutar la app
+// Configure the HTTP request pipeline. 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;// se obtiene el servicio
@@ -47,6 +49,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
